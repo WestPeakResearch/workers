@@ -11,8 +11,13 @@ export default {
       data = await req.json();
     } else {
       const form = await req.formData();
-      for (const [k, v] of form.entries())
-        data[k] = v;
+      for (const [k, v] of form.entries()) {
+        if (k in data) {
+          data[k] += `,${v}`;
+        } else {
+          data[k] = v;
+        }
+      }
     }
 
     if (env.GAS_SHARED_SECRET) data.secret = env.GAS_SHARED_SECRET;
